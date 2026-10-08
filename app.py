@@ -408,61 +408,72 @@ elif page == "Employee Risk Profile":
 
         st.table(details)
 
-# ============================================================
-# DEPARTMENT RISK ANALYSIS
-# ============================================================
+# ------------------------------------------
+# DEPARTMENT-LEVEL RISK ANALYSIS
+# ------------------------------------------
 
-elif page == "Department Risk Analysis":
+st.subheader("🏢 Department-Level Risk Analysis")
+st.write("📊 Department Risk Summary")
 
-    st.header("🏢 Department-Level Risk Analysis")
+# Create department summary
+department_summary = (
+    filtered_df.groupby("Department")
+    .agg(
+        Employees=("EmployeeID", "count"),
+        AverageRisk=("RiskScore", "mean"),
+        HighRiskEmployees=("RiskCategory", lambda x: (x == "High Risk").sum())
+    )
+    .reset_index()
+)
 
-    if len(filtered_df) == 0:
+# Round average risk
+department_summary["AverageRisk"] = department_summary["AverageRisk"].round(2)
 
-        st.warning(
-            "No employees match the selected filters."
+# Display department summary
+for index, row in department_summary.iterrows():
+
+    col1, col2, col3, col4, col5 = st.columns([2.5, 1.2, 1.2, 1.5, 1])
+
+    col1.write(row["Department"])
+    col2.write(int(row["Employees"]))
+    col3.write(row["AverageRisk"])
+    col4.write(int(row["HighRiskEmployees"]))
+
+    if col5.button("View", key=f"view_{row['Department']}"):
+
+        # Filter employees belonging to selected department
+        department_employees = filtered_df[
+            filtered_df["Department"] == row["Department"]
+        ]
+
+        st.markdown(
+            f"### 👥 Employees in {row['Department']}"
         )
 
-    else:
+        # Select columns to display
+        display_columns = [
+            "EmployeeID",
+            "Department",
+            "JobRole",
+            "MonthlyIncome",
+            "JobSatisfaction",
+            "OverTime",
+            "YearsAtCompany",
+            "AttritionProbability",
+            "RiskCategory"
+        ]
 
-        department_summary = (
-            filtered_df
-            .groupby("Department")
-            .agg(
-                Employees=("EmployeeID", "count"),
-                AverageRisk=("RiskScore", "mean"),
-                HighRiskEmployees=(
-                    "RiskCategory",
-                    lambda x:
-                    (x == "High Risk").sum()
-                )
-            )
-            .reset_index()
-        )
-
-        department_summary["AverageRisk"] = (
-            department_summary["AverageRisk"]
-            .round(2)
-        )
-
-        st.subheader("📊 Department Risk Summary")
+        # Keep only columns that actually exist
+        display_columns = [
+            col for col in display_columns
+            if col in department_employees.columns
+        ]
 
         st.dataframe(
-            department_summary,
-            use_container_width=True
+            department_employees[display_columns],
+            use_container_width=True,
+            hide_index=True
         )
-
-        st.subheader(
-            "Average Attrition Risk by Department"
-        )
-
-        chart_data = (
-            department_summary
-            .set_index("Department")
-            ["AverageRisk"]
-        )
-
-        st.bar_chart(chart_data)
-
 
 
 # ============================================================
