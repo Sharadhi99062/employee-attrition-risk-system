@@ -431,7 +431,17 @@ elif page == "Department Risk Analysis":
         department_summary["AverageRisk"].round(2)
     )
 
-    for index, row in department_summary.iterrows():
+header1, header2, header3, header4, header5 = st.columns(
+    [2.5, 1.2, 1.2, 1.5, 1]
+)
+
+header1.write("**Department**")
+header2.write("**Employees**")
+header3.write("**Average Risk**")
+header4.write("**High Risk Employees**")
+header5.write("**View**")
+    
+for index, row in department_summary.iterrows():
 
         col1, col2, col3, col4, col5 = st.columns(
             [2.5, 1.2, 1.2, 1.5, 1]
