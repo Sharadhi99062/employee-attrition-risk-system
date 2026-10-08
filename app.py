@@ -417,68 +417,69 @@ elif page == "Department Risk Analysis":
     st.subheader("🏢 Department-Level Risk Analysis")
     st.write("📊 Department Risk Summary")
 
-# Create department summary
     department_summary = (
         filtered_df.groupby("Department")
-         .agg(
-              Employees=("EmployeeID", "count"),
-               AverageRisk=("RiskScore", "mean"),
-              HighRiskEmployees=("RiskCategory", lambda x: (x == "High Risk").sum())
+        .agg(
+            Employees=("EmployeeID", "count"),
+            AverageRisk=("RiskScore", "mean"),
+            HighRiskEmployees=("RiskCategory", lambda x: (x == "High Risk").sum())
+        )
+        .reset_index()
     )
-    .reset_index()
-)
 
-# Round average risk
-department_summary["AverageRisk"] = department_summary["AverageRisk"].round(2)
+    department_summary["AverageRisk"] = (
+        department_summary["AverageRisk"].round(2)
+    )
 
-# Display department summary
-for index, row in department_summary.iterrows():
+    for index, row in department_summary.iterrows():
 
-    col1, col2, col3, col4, col5 = st.columns([2.5, 1.2, 1.2, 1.5, 1])
-
-    col1.write(row["Department"])
-    col2.write(int(row["Employees"]))
-    col3.write(row["AverageRisk"])
-    col4.write(int(row["HighRiskEmployees"]))
-
-    if col5.button("View", key=f"view_{row['Department']}"):
-
-        # Filter employees belonging to selected department
-        department_employees = filtered_df[
-            filtered_df["Department"] == row["Department"]
-        ]
-
-        st.markdown(
-            f"### 👥 Employees in {row['Department']}"
+        col1, col2, col3, col4, col5 = st.columns(
+            [2.5, 1.2, 1.2, 1.5, 1]
         )
 
-        # Select columns to display
-        display_columns = [
-            "EmployeeID",
-            "Department",
-            "JobRole",
-            "MonthlyIncome",
-            "JobSatisfaction",
-            "OverTime",
-            "YearsAtCompany",
-            "AttritionProbability",
-            "RiskCategory"
-        ]
+        col1.write(row["Department"])
+        col2.write(int(row["Employees"]))
+        col3.write(row["AverageRisk"])
+        col4.write(int(row["HighRiskEmployees"]))
 
-        # Keep only columns that actually exist
-        display_columns = [
-            col for col in display_columns
-            if col in department_employees.columns
-        ]
+        if col5.button(
+            "View",
+            key=f"view_{row['Department']}"
+        ):
 
-        st.dataframe(
-            department_employees[display_columns],
-            use_container_width=True,
-            hide_index=True
-        )
+            department_employees = filtered_df[
+                filtered_df["Department"] == row["Department"]
+            ]
+
+            st.markdown(
+                f"### 👥 Employees in {row['Department']}"
+            )
+
+            display_columns = [
+                "EmployeeID",
+                "Department",
+                "JobRole",
+                "MonthlyIncome",
+                "JobSatisfaction",
+                "OverTime",
+                "YearsAtCompany",
+                "AttritionProbability",
+                "RiskCategory"
+            ]
+
+            display_columns = [
+                col for col in display_columns
+                if col in department_employees.columns
+            ]
+
+            st.dataframe(
+                department_employees[display_columns],
+                use_container_width=True,
+                hide_index=True
+            )
 
 
-# ============================================================
+======================================================
 # EXPLAINABILITY
 # ============================================================
 
