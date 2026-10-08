@@ -414,16 +414,16 @@ elif page == "Employee Risk Profile":
 
 elif page == "Department Risk Analysis":
 
-st.subheader("🏢 Department-Level Risk Analysis")
-st.write("📊 Department Risk Summary")
+    st.subheader("🏢 Department-Level Risk Analysis")
+    st.write("📊 Department Risk Summary")
 
 # Create department summary
-department_summary = (
-    filtered_df.groupby("Department")
-    .agg(
-        Employees=("EmployeeID", "count"),
-        AverageRisk=("RiskScore", "mean"),
-        HighRiskEmployees=("RiskCategory", lambda x: (x == "High Risk").sum())
+    department_summary = (
+        filtered_df.groupby("Department")
+         .agg(
+              Employees=("EmployeeID", "count"),
+               AverageRisk=("RiskScore", "mean"),
+              HighRiskEmployees=("RiskCategory", lambda x: (x == "High Risk").sum())
     )
     .reset_index()
 )
