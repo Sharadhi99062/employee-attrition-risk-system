@@ -431,7 +431,7 @@ elif page == "Department Risk Analysis":
         department_summary["AverageRisk"].round(2)
     )
 
-header1, header2, header3, header4, header5 = st.columns(
+    header1, header2, header3, header4, header5 = st.columns(
     [2.5, 1.2, 1.2, 1.5, 1]
 )
 
