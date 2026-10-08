@@ -412,6 +412,8 @@ elif page == "Employee Risk Profile":
 # DEPARTMENT-LEVEL RISK ANALYSIS
 # ------------------------------------------
 
+elif page == "Department Risk Analysis":
+
 st.subheader("🏢 Department-Level Risk Analysis")
 st.write("📊 Department Risk Summary")
 
