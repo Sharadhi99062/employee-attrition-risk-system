@@ -484,7 +484,22 @@ elif page == "Department Risk Analysis":
                 use_container_width=True,
                 hide_index=True
             )
-       
+    # Department Risk Distribution
+        st.subheader("📊 Department Risk Distribution")
+
+        department_risk = (
+            filtered_df.groupby(["Department", "RiskCategory"])
+            .size()
+            .reset_index(name="Employees")
+        )
+
+        department_risk_pivot = department_risk.pivot(
+            index="Department",
+            columns="RiskCategory",
+            values="Employees"
+        ).fillna(0)
+
+        st.bar_chart(department_risk_pivot)
 
 # ==========================================================
 # EXPLAINABILITY
