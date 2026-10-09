@@ -192,11 +192,8 @@ if page == "Overview Dashboard":
         "Review workload and overtime among high-risk employees.",
         "Conduct regular employee satisfaction and engagement surveys.",
         "Provide career development and promotion opportunities.",
-        "Review work-life balance for employees showing elevated risk.",
-        "Use targeted retention discussions instead of broad interventions.",
-        "Consider compensation and career progression when appropriate.",
-        "Use model predictions as decision-support information rather than automatic HR decisions."
-    ]
+        "Review work-life balance for employees showing elevated risk."
+      ]
 
     for recommendation in recommendations:
         st.write(f"• {recommendation}")
