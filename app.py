@@ -582,7 +582,15 @@ elif page == "Explainability":
             ["Importance"]
         )
 
-    
+        # Display positive and negative coefficients
+        chart_data = importance_df.copy()
+
+        # Ensure Feature is a column
+        if "Feature" not in chart_data.columns:
+            chart_data = chart_data.reset_index()
+        chart_data = chart_data.sort_values("Coefficient")
+        chart_data = chart_data.set_index("Feature")[["Coefficient"]]
+
         st.bar_chart(chart_data)
         
         st.dataframe(
