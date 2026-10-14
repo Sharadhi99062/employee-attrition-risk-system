@@ -582,13 +582,7 @@ elif page == "Explainability":
             ["Importance"]
         )
 
-       
-        # display positive and negative coefficients
-        chart_data = (
-            importance_df
-            .sort_values("Coefficient")
-            .set_index("Featrure")[["Coefficient"]]
-        )
+    
         st.bar_chart(chart_data)
         
         st.dataframe(
